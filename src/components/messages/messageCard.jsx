@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { LikeButton } from "./likeButton.jsx";
-import { HappyText } from "./text.jsx";
+import { HappyText } from "./messageText.jsx";
 import { Time } from "./time.jsx";
 
 export const MessageCard = () => {
@@ -36,7 +36,15 @@ const StyledLikeCard = styled.div`
     padding: 20px;
     background-color: ${({ theme }) => theme.colors.cardBackground };
     box-shadow: 7px 7px #1a1a1a;
-`
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        width: 90%;
+    } 
+
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        width: 70%;
+    } 
+    `
 
 const LikeButtonWrapper = styled.div`
     display: flex;

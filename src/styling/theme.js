@@ -6,9 +6,10 @@ export const theme = {
         text: "#1a1a1a",
         border: "#000000"
     },
+
     breakpoints: {
-        mobile: "480px",
-        tablet: "768px",
-        desktop: "1024px"
+        mobile: "(max-width: 480px)",
+        tablet: "(min-width: 481px) and (max-width: 1023px)",
+        desktop: "(min-width: 1024px)"
     }
 }

@@ -1,21 +1,35 @@
+import { useState } from "react"
+
 import { GlobalStyles } from "./styling/globalStyles.js"
 import { theme } from "./styling/theme.js"
-import { Hero } from "./ts-practice/hero"
-import { Footer } from "./ts-practice/footer"
+import { Header } from "./components/header.js"
+import { Footer } from "./components/footer.js"
 import { InputCard } from "./components/input/inputCard.jsx"
 import { MessageCard } from "./components/messages/messageCard.jsx"
 import { ThemeProvider } from "styled-components"
 
 export const App = () => {
+  const [messages, setMessages] = useState([])
+
+  const addMessage = (newText) => {
+    const newMessage = {
+      text: newText,
+      hearts: 0,
+      createdAt: Date.now(),
+    }
+
+    setMessages([...messages, newMessage])
+  }
+
   return (
     <>
       <ThemeProvider theme={theme}>
         <GlobalStyles />
 
         <main>
-          <Hero text="Happy Thoughts"/>
+          <Header text="Happy Thoughts"/>
 
-          <InputCard />
+          <InputCard onSubmit={addMessage} />
 
           <MessageCard />
 

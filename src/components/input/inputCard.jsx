@@ -1,17 +1,14 @@
 import styled from "styled-components"
-import { Title } from "./text.jsx"
+import { Title } from "./inputTitle.jsx"
 import { InputForm } from "./inputForm.jsx"
-import { SubmitButton } from "./submitButton.jsx"
 
-export const InputCard = () => {
+export const InputCard = ({onSubmit}) => {
     return (
         <InputCardSection>
             <StyledInputCard>
                 <Title />
 
-                <InputForm />
-
-                <SubmitButton />
+                <InputForm onSubmit={onSubmit} />
 
             </StyledInputCard>
         </InputCardSection>
@@ -34,4 +31,12 @@ const StyledInputCard = styled.div`
     padding: 20px;
     background-color: #f2f0f0;
     box-shadow: 7px 7px #1a1a1a;
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        width: 90%;
+    }   
+
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        width: 70%;
+    }  
 `

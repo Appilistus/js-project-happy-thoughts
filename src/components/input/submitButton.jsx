@@ -12,6 +12,7 @@ const StyledButton = styled.button`
     background-color: ${({ theme }) => theme.colors.primary};
     border: none;
     border-radius: 50px;
+    width: 50%;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
@@ -20,4 +21,8 @@ const StyledButton = styled.button`
     &:hover {
         background-color:${({ theme }) => theme.colors.secondary};
     }
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        width: 100%;
+    }   
 `
