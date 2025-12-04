@@ -20,6 +20,7 @@ export const InputForm = ({ onSubmit }) => {
                 onChange={event => setTextInput(event.target.value)}
                 value={textInput}
                 placeholder="React is making me happy!"
+                maxLength={140}
             />
             <SubmitButton type="submit" />
         </StyledForm>

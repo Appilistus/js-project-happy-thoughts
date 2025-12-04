@@ -1,8 +1,11 @@
 import styled from "styled-components";
 
-export const SubmitButton = () => {
+export const SubmitButton = ( textInput ) => {
     return (
-        <StyledButton type="submit">
+        <StyledButton 
+            type="submit"
+            disabled={textInput.length === 0 || textInput.length > 140}
+        >
             ❤️ Send Happy Thought ❤️
         </StyledButton>
     )

@@ -3,7 +3,7 @@ import { LikeButton } from "./likeButton.jsx";
 import { HappyText } from "./happyText.jsx";
 import { Time } from "./time.jsx";
 
-export const MessageCard = ({ id, text, hearts, onLike, createdAt }) => {
+export const MessageCard = ({ id, text, hearts, onLike, liked, createdAt }) => {
     return (
         <MessageSection>
             <StyledLikeCard>
@@ -12,7 +12,7 @@ export const MessageCard = ({ id, text, hearts, onLike, createdAt }) => {
                     <LikeButton 
                         hearts={hearts}
                         onLike={() => onLike(id)}
-                        liked={hearts > 0}
+                        liked={liked}
                     />
 
                     <Time createdAt={createdAt}/>

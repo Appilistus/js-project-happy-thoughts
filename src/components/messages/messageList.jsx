@@ -12,6 +12,7 @@ export const MessageList = ({ messages, onLike }) => {
                         hearts={message.hearts}
                         createdAt={message.createdAt}
                         onLike={onLike}
+                        liked={message.hearts > 0}
                     />
                 )
             })}

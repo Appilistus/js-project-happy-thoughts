@@ -18,7 +18,7 @@ export const App = () => {
       createdAt: Date.now(),
     }
 
-    setMessages([newMessage, ...messages]) // Add new message at the beginning of the array
+    setMessages([newMessage, ...messages]) // Add new message on top of the list
   }
 
   const increaseHeart = (index) => {
