@@ -13,7 +13,7 @@ export const InputForm = ({ onSubmit }) => {
         onSubmit(textInput)
         setTextInput("") // Clear the input after submission
     }
-    
+
     return (
         <StyledForm onSubmit={handleSubmit}>
             <textarea
@@ -22,6 +22,7 @@ export const InputForm = ({ onSubmit }) => {
                 placeholder="React is making me happy!"
                 maxLength={140}
             />
+            <StyledP>{textInput.length} / 140</StyledP>
             <SubmitButton type="submit" />
         </StyledForm>
     )
@@ -43,8 +44,14 @@ const StyledForm = styled.form`
         padding: 5px 10px;
         border: 2px solid #ccc;
         border-radius: 5px;
-        margin-bottom: 15px;
         white-space: pre-wrap;
         word-wrap: break-word;
     }
+`
+
+const StyledP = styled.p`
+    font-size: 12px;
+    color: ${({ theme }) => theme.colors.textSecondary };
+    margin-bottom: 15px;
+    padding: 0;
 `

@@ -10,6 +10,7 @@ declare module "styled-components" {
             likeBtnBackground: string,
             cardBackground: string;
             text: string;
+            textSecondary: string;
             border: string;
         };
         breakpoints: {

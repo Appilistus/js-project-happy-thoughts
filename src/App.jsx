@@ -43,7 +43,7 @@ export const App = () => {
           />
 
         </main>
-          <Footer text="Happy Thoughts by Asako"/>
+          <Footer text="&copy; ❤️ Happy Thoughts ❤️"/>
       </ThemeProvider>
     </>
   )

@@ -6,6 +6,7 @@ export const theme = {
         cardBackground: "#ffffff",
         likeBtnBackground: "#ffe3e3",
         text: "#1a1a1a",
+        textSecondary: "#4d4d4d",
         border: "#000000"
     },
 
