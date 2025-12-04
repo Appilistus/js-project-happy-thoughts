@@ -2,7 +2,9 @@ export const theme = {
     colors: {
         primary: "#ffadad",
         secondary: "#ff6f6f",
+        formBackground: "#f2f0f0",
         cardBackground: "#ffffff",
+        likeBtnBackground: "#ffe3e3",
         text: "#1a1a1a",
         border: "#000000"
     },

@@ -6,8 +6,11 @@ declare module "styled-components" {
         colors: {
             primary: string;
             secondary: string;
+            formBackground: string,
+            likeBtnBackground: string,
             cardBackground: string;
             text: string;
+            border: string;
         };
         breakpoints: {
             mobile: string;

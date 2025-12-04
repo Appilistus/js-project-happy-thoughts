@@ -1,17 +1,21 @@
 import styled from "styled-components";
 import { LikeButton } from "./likeButton.jsx";
-import { HappyText } from "./messageText.jsx";
+import { HappyText } from "./happyText.jsx";
 import { Time } from "./time.jsx";
 
-export const MessageCard = () => {
+export const MessageCard = ({ id, text, hearts, onLike, createdAt }) => {
     return (
         <MessageSection>
             <StyledLikeCard>
-                <HappyText />
+                <HappyText text={text}/>
                 <LikeButtonWrapper>
-                    <LikeButton />
+                    <LikeButton 
+                        hearts={hearts}
+                        onLike={() => onLike(id)}
+                        liked={hearts > 0}
+                    />
 
-                    <Time />
+                    <Time createdAt={createdAt}/>
                 </LikeButtonWrapper>
             </StyledLikeCard>
         </MessageSection>

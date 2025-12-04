@@ -25,12 +25,12 @@ const StyledInputCard = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    border: 2px solid #000000;
+    border: 2px solid ${({ theme }) => theme.colors.border };
     width: 50%;
     height: auto;
     padding: 20px;
-    background-color: #f2f0f0;
-    box-shadow: 7px 7px #1a1a1a;
+    background-color: ${({ theme }) => theme.colors.formBackground };
+    box-shadow: 7px 7px ${({ theme }) => theme.colors.border };
 
     @media ${({ theme }) => theme.breakpoints.mobile} {
         width: 90%;

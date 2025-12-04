@@ -1,12 +1,12 @@
 import { useState } from "react"
 
+import { ThemeProvider } from "styled-components"
 import { GlobalStyles } from "./styling/globalStyles.js"
 import { theme } from "./styling/theme.js"
 import { Header } from "./components/header.js"
 import { Footer } from "./components/footer.js"
 import { InputCard } from "./components/input/inputCard.jsx"
-import { MessageCard } from "./components/messages/messageCard.jsx"
-import { ThemeProvider } from "styled-components"
+import { MessageList } from "./components/messages/messageList.jsx"
 
 export const App = () => {
   const [messages, setMessages] = useState([])
@@ -18,7 +18,13 @@ export const App = () => {
       createdAt: Date.now(),
     }
 
-    setMessages([...messages, newMessage])
+    setMessages([newMessage, ...messages]) // Add new message at the beginning of the array
+  }
+
+  const increaseHeart = (index) => {
+    const updated = [...messages]
+    updated[index].hearts += 1
+    setMessages(updated)
   }
 
   return (
@@ -26,15 +32,18 @@ export const App = () => {
       <ThemeProvider theme={theme}>
         <GlobalStyles />
 
-        <main>
           <Header text="Happy Thoughts"/>
+        <main>
 
           <InputCard onSubmit={addMessage} />
 
-          <MessageCard />
+          <MessageList 
+            messages={messages}
+            onLike={increaseHeart}
+          />
 
-          <Footer text="Happy Thoughts by Asako"/>
         </main>
+          <Footer text="Happy Thoughts by Asako"/>
       </ThemeProvider>
     </>
   )

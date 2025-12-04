@@ -1,20 +1,17 @@
-import { useState } from 'react'
 import styled from 'styled-components'
 import { Paragraph } from '../../styling/typography.js'
 
-export const LikeButton = () => {
-    const [likeCount, setLikeCount] = useState(0)
-
-    const handleLike = () => {
-        setLikeCount(likeCount + 1)
-    }
-
+export const LikeButton = ({ hearts, liked, onLike }) => {
     return (
         <ButtonWrapper>
-            <StyledLikeButton type="button" onClick={handleLike}>
+            <StyledLikeButton 
+                type="button" 
+                onClick={onLike}
+                liked={liked}
+            >
                 ❤️ 
             </StyledLikeButton>
-            <Paragraph> x {likeCount}</Paragraph>
+            <Paragraph> x {hearts}</Paragraph>
         </ButtonWrapper>
     )
 }
@@ -27,7 +24,8 @@ const ButtonWrapper = styled.div`
 `
 
 const StyledLikeButton = styled.button`
-    background-color: ${({ theme }) => theme.colors.primary};
+    background-color: ${({ theme, liked }) => 
+        liked ? theme.colors.primary : theme.colors.formBackground };
     border: none;
     border-radius: 50%;
     width: 40px;
