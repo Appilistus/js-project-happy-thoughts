@@ -35,7 +35,6 @@ export const App = () => {
           <AppContainer>
 
             <Header text="Happy Thoughts"/>
-              {/* <main> */}
 
                 <InputCard onSubmit={addMessage} />
                 
@@ -46,7 +45,6 @@ export const App = () => {
                   />
                 </ScrollArea>
 
-              {/* </main> */}
             <Footer text="&copy; ❤️ Happy Thoughts ❤️"/>
 
           </AppContainer>
