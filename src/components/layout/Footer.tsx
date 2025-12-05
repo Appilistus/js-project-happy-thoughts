@@ -1,5 +1,4 @@
 import { styled } from "styled-components";
-import { Paragraph } from "../styling/typography.js";
 
 type Props = {
     text: string;
@@ -20,7 +19,7 @@ const FooterSection = styled.footer`
     bottom: 0;
     width: 100%;
 `
-const FooterText = styled(Paragraph)`
+const FooterText = styled.p`
     display: flex;
     align-items: center;
     justify-content: center;

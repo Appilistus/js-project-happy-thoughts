@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { Paragraph } from '../../styling/typography.js'
 
 export const LikeButton = ({ hearts, liked, onLike }) => {
     return (
@@ -11,7 +10,7 @@ export const LikeButton = ({ hearts, liked, onLike }) => {
             >
                 ❤️ 
             </StyledLikeButton>
-            <Paragraph> x {hearts}</Paragraph>
+            <p> x {hearts}</p>
         </ButtonWrapper>
     )
 }

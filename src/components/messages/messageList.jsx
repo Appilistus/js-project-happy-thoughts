@@ -1,4 +1,4 @@
-import { MessageCard } from "./messageCard.jsx";
+import { MessageCard } from "./MessageCard.jsx";
 
 export const MessageList = ({ messages, onLike }) => {
     return (

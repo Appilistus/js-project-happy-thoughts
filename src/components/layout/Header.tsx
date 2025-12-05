@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import { AnimatedTitle } from "../styling/animatedTitle.jsx";
+import { AnimatedTitle } from "../../styling/animatedTitle.jsx";
 
 type Props = {
     text: string;

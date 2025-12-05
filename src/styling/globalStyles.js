@@ -12,4 +12,8 @@ export const GlobalStyles = createGlobalStyle`
         color: #1a1a1a;
         font-family: Google Sans Code, sans-serif;
     }
+
+    p{
+        font-size: 1rem;
+    }
 `

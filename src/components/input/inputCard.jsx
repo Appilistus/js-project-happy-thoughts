@@ -1,6 +1,6 @@
 import styled from "styled-components"
-import { Title } from "./inputTitle.jsx"
-import { InputForm } from "./inputForm.jsx"
+import { Title } from "./InputTitle.jsx"
+import { InputForm } from "./InputForm.jsx"
 
 export const InputCard = ({onSubmit}) => {
     return (

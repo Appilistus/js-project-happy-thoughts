@@ -1,6 +1,6 @@
 import { useState } from "react"
 import styled from "styled-components"
-import { SubmitButton } from "./submitButton.jsx"
+import { SubmitButton } from "./SubmitButton.jsx"
 
 
 export const InputForm = ({ onSubmit }) => {
@@ -52,6 +52,6 @@ const StyledForm = styled.form`
 const StyledP = styled.p`
     font-size: 12px;
     color: ${({ theme }) => theme.colors.textSecondary };
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     padding: 0;
 `
