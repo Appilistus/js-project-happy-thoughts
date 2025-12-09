@@ -3,15 +3,15 @@ import { MessageCard } from "./MessageCard.jsx";
 export const MessageList = ({ messages, onLike }) => {
     return (
         <div>
-            {messages.map((message, index) => {
+            {messages.map((message) => {
                 return (
                     <MessageCard
-                        key={index}
-                        id={index}
-                        text={message.text}
+                        key={message._id}
+                        id={message._id}
+                        text={message.message}
                         hearts={message.hearts}
                         createdAt={message.createdAt}
-                        onLike={onLike}
+                        onLike={() => onLike(message._id)}
                         liked={message.hearts > 0}
                     />
                 )

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import styled from "styled-components"
 
 import { ThemeProvider } from "styled-components"
@@ -12,19 +12,42 @@ import { MessageList } from "./components/messages/MessageList.jsx"
 export const App = () => {
   const [messages, setMessages] = useState([])
 
-  const addMessage = (newText) => {
-    const newMessage = {
-      text: newText,
-      hearts: 0,
-      createdAt: Date.now(),
-    }
+  // fetch messages from API
+  useEffect(() => {
+    fetch("https://happy-thoughts-api-4ful.onrender.com/thoughts")
+    .then(res => res.json())
+    .then(data => setMessages(data))
+  },[])
 
-    setMessages([newMessage, ...messages]) // Add new message on top of the list
+  // Post new message to API
+  const addMessage = async (newText) => {
+    const response = await fetch("https://happy-thoughts-api-4ful.onrender.com/thoughts", 
+      {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ message: newText})
+      }
+    )
+
+    const data = await response.json()
+
+    setMessages([data, ...messages])
   }
 
-  const increaseHeart = (index) => {
-    const updated = [...messages]
-    updated[index].hearts += 1
+  // Send like to API
+  const increaseHeart = async (id) => {
+    const message = messages.find(msg => msg._id === id)
+
+    await fetch(
+      `https://happy-thoughts-api-4ful.onrender.com/thoughts/${message._id}/like`,
+      { method: "POST"}
+    )
+
+    const updated = messages.map(msg =>
+      msg._id === id 
+        ? { ...msg, hearts: msg.hearts + 1 } 
+        : msg
+    )
     setMessages(updated)
   }
 
