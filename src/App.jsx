@@ -11,12 +11,16 @@ import { MessageList } from "./components/messages/MessageList.jsx"
 
 export const App = () => {
   const [messages, setMessages] = useState([])
+  const [loading, setLoading] = useState(true)
 
   // fetch messages from API
   useEffect(() => {
     fetch("https://happy-thoughts-api-4ful.onrender.com/thoughts")
     .then(res => res.json())
-    .then(data => setMessages(data))
+    .then(data => {
+      setMessages(data)
+      setLoading(false)
+    })
   },[])
 
   // Post new message to API
@@ -31,7 +35,7 @@ export const App = () => {
 
     const data = await response.json()
 
-    setMessages([data, ...messages])
+    setMessages(prev => [data, ...prev])
   }
 
   // Send like to API
@@ -60,13 +64,18 @@ export const App = () => {
             <Header text="Happy Thoughts"/>
 
                 <InputCard onSubmit={addMessage} />
+
+                {loading ? (
+                  <LoadingWrapper>Loading Happy Thoughts...</LoadingWrapper>
+                ) : (
+                  <ScrollArea>
+                    <MessageList 
+                      messages={messages}
+                      onLike={increaseHeart}
+                    />
+                  </ScrollArea>
+                )}
                 
-                <ScrollArea>
-                  <MessageList 
-                    messages={messages}
-                    onLike={increaseHeart}
-                  />
-                </ScrollArea>
 
             <Footer text="&copy; ❤️ Happy Thoughts ❤️"/>
 
@@ -80,6 +89,15 @@ const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
+`
+
+const LoadingWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 20px;
+  color: ${({ theme }) => theme.colors.text };
 `
 
 const ScrollArea = styled.div`
