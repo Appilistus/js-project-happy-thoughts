@@ -1,12 +1,12 @@
 import styled from "styled-components"
-import { Title } from "./InputTitle.jsx"
+// import { Title } from "./InputTitle.jsx"
 import { InputForm } from "./InputForm.jsx"
 
 export const InputCard = ({onSubmit}) => {
     return (
         <InputCardSection>
             <StyledInputCard>
-                <Title />
+                <p>What's making you happy right now?</p>
 
                 <InputForm onSubmit={onSubmit} />
 

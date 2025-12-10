@@ -13,14 +13,25 @@ export const App = () => {
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(true)
 
-  // fetch messages from API
+  // fetch messages from API + interval polling
   useEffect(() => {
-    fetch("https://happy-thoughts-api-4ful.onrender.com/thoughts")
-    .then(res => res.json())
-    .then(data => {
-      setMessages(data)
-      setLoading(false)
-    })
+    const fetchMessages = () => {
+      fetch("https://happy-thoughts-api-4ful.onrender.com/thoughts")
+      .then(res => res.json())
+      .then(data => {
+        setMessages(data)
+        setLoading(false)
+      })
+    }
+    fetchMessages()
+
+    // Set interval to fetch messages every 30 seconds
+    const intervalID = setInterval(fetchMessages, 30000)
+
+    console.log(messages);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalID)
   },[])
 
   // Post new message to API

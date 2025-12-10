@@ -1,17 +1,28 @@
 import { useState } from "react"
-import styled from "styled-components"
+import styled, { useTheme } from "styled-components"
 import { SubmitButton } from "./SubmitButton.jsx"
 
 
 export const InputForm = ({ onSubmit }) => {
     const [textInput, setTextInput] = useState("")
+    const theme = useTheme()
+
+    const isValid = textInput.length >= 5 && textInput.length <= 140
+    const showError = textInput.length > 0 && !isValid
     
     const handleSubmit = (event) => {
         event.preventDefault()
-        if (textInput.trim() === "") return
+        if (!isValid) return
 
         onSubmit(textInput)
         setTextInput("") // Clear the input after submission
+    }
+
+    // Change color of character count based on length
+    const getColor = () => {
+        const length = textInput.length
+        if (length >= 130) return theme.colors.inputLimit
+        return theme.colors.text
     }
 
     return (
@@ -20,10 +31,15 @@ export const InputForm = ({ onSubmit }) => {
                 onChange={event => setTextInput(event.target.value)}
                 value={textInput}
                 placeholder="React is making me happy!"
-                maxLength={140}
             />
-            <StyledP>{textInput.length} / 140</StyledP>
-            <SubmitButton type="submit" />
+                <StyledP style={{ color: getColor() }}>{textInput.length} / 140</StyledP>
+                {showError && (
+                    <ErrorText>
+                        Message must be between 5 and 140 characters
+                    </ErrorText>
+                )}
+
+            <SubmitButton type="submit" disabled={!isValid}/>
         </StyledForm>
     )
 }
@@ -51,7 +67,11 @@ const StyledForm = styled.form`
 
 const StyledP = styled.p`
     font-size: 12px;
-    color: ${({ theme }) => theme.colors.textSecondary };
     margin-bottom: 10px;
     padding: 0;
+`
+const ErrorText = styled.p`
+    font-size: 12px;
+    color: ${({ theme }) => theme.colors.inputLimit };
+    margin-bottom: 10px;
 `
