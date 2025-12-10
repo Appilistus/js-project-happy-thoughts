@@ -14,7 +14,7 @@ export const Footer = ({text}:Props) => {
 
 const FooterSection = styled.footer`
     padding: 15px 0;
-    background-color: #ffadad;
+    background-color: ${({ theme }) => theme.colors.primary};
     position: absolute;
     bottom: 0;
     width: 100%;

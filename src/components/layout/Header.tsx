@@ -1,21 +1,20 @@
-import { styled } from "styled-components";
-import { AnimatedTitle } from "../../styling/animatedTitle.jsx";
+import { styled } from "styled-components"
 
-type Props = {
-    text: string;
+type HeaderProps = {
+    likedCount: number;
 }
 
-export const Header = ({ text }: Props) => {
+export const Header =({ likedCount }: HeaderProps ) => {
     return (
-        <HeaderSection>
-            <AnimatedTitle text={text} />
-        </HeaderSection>
+        <NavBar>
+            ❤️ {likedCount} liked
+        </NavBar>
     )
 }
 
-const HeaderSection = styled.div`
+const NavBar = styled.div`
+    background-color: ${({ theme }) => theme.colors.primary};
     display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100px;
+    justify-content: flex-end;
+    padding: 10px 30px;
 `

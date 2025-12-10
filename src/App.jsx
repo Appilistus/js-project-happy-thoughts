@@ -5,6 +5,7 @@ import { ThemeProvider } from "styled-components"
 import { GlobalStyles } from "./styling/globalStyles.js"
 import { theme } from "./styling/theme.js"
 import { Header } from "./components/layout/Header.js"
+import { Hero } from "./components/layout/Hero.js"
 import { Footer } from "./components/layout/Footer.js"
 import { InputCard } from "./components/input/InputCard.jsx"
 import { MessageList } from "./components/messages/MessageList.jsx"
@@ -12,6 +13,12 @@ import { MessageList } from "./components/messages/MessageList.jsx"
 export const App = () => {
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(true)
+
+  // State to track liked posts in local storage
+  const [likedPosts, setLikedPosts] = useState(() => {
+    const saved = localStorage.getItem("likedPosts")
+    return saved ? JSON.parse(saved) : []
+  })
 
   // fetch messages from API + interval polling
   useEffect(() => {
@@ -23,16 +30,19 @@ export const App = () => {
         setLoading(false)
       })
     }
-    fetchMessages()
+    fetchMessages() // Initial fetch
 
     // Set interval to fetch messages every 30 seconds
     const intervalID = setInterval(fetchMessages, 30000)
 
-    console.log(messages);
-
     // Cleanup interval on component unmount
     return () => clearInterval(intervalID)
   },[])
+
+  // Update local storage when likedPosts changes
+  useEffect(() => {
+    localStorage.setItem("likedPosts", JSON.stringify(likedPosts))
+  }, [likedPosts])
 
   // Post new message to API
   const addMessage = async (newText) => {
@@ -64,6 +74,11 @@ export const App = () => {
         : msg
     )
     setMessages(updated)
+
+    // Update likedPosts state
+    setLikedPosts(prev =>
+      prev.includes(id) ? prev : [...prev, id]
+    )
   }
 
   return (
@@ -72,21 +87,23 @@ export const App = () => {
         <GlobalStyles />
           <AppContainer>
 
-            <Header text="Happy Thoughts"/>
+            <Header likedCount={likedPosts.length} />
 
-                <InputCard onSubmit={addMessage} />
+            <Hero text="Happy Thoughts"/>
 
-                {loading ? (
-                  <LoadingWrapper>Loading Happy Thoughts...</LoadingWrapper>
-                ) : (
-                  <ScrollArea>
-                    <MessageList 
-                      messages={messages}
-                      onLike={increaseHeart}
-                    />
-                  </ScrollArea>
-                )}
-                
+            <InputCard onSubmit={addMessage} />
+
+            {loading ? (
+              <LoadingWrapper>Loading Happy Thoughts...</LoadingWrapper>
+            ) : (
+              <ScrollArea>
+                <MessageList 
+                  messages={messages}
+                  onLike={increaseHeart}
+                />
+              </ScrollArea>
+            )}
+              
 
             <Footer text="&copy; ❤️ Happy Thoughts ❤️"/>
 
