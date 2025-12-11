@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import styled from "styled-components"
 
 import { ThemeProvider } from "styled-components"
@@ -12,6 +12,9 @@ import { MessageList } from "./components/messages/MessageList.jsx"
 import { HeartLoader } from "./styling/LoadingAnime.jsx"
 
 export const App = () => {
+
+  const scrollRef = useRef(null)
+
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -61,6 +64,15 @@ export const App = () => {
     setMessages(prev => [data, ...prev])
   }
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      })
+    }
+  },[messages])
+
   // Send like to API
   const increaseHeart = async (id) => {
     const message = messages.find(msg => msg._id === id)
@@ -103,7 +115,7 @@ export const App = () => {
                 <p>Loading Happy Thoughts...</p>
               </LoadingWrapper>
             ) : (
-              <ScrollArea>
+              <ScrollArea ref={scrollRef}>
                 <CardWrapper>
                   <MessageList 
                     messages={messages}
