@@ -9,6 +9,7 @@ import { Hero } from "./components/layout/Hero.js"
 import { Footer } from "./components/layout/Footer.js"
 import { InputCard } from "./components/input/InputCard.jsx"
 import { MessageList } from "./components/messages/MessageList.jsx"
+import { HeartLoader } from "./styling/LoadingAnime.jsx"
 
 export const App = () => {
   const [messages, setMessages] = useState([])
@@ -26,10 +27,12 @@ export const App = () => {
       fetch("https://happy-thoughts-api-4ful.onrender.com/thoughts")
       .then(res => res.json())
       .then(data => {
+        setTimeout(() => {
         setMessages(data)
         setLoading(false)
-      })
-    }
+      }, 5000)
+    })
+  }
     fetchMessages() // Initial fetch
 
     // Set interval to fetch messages every 30 seconds
@@ -94,7 +97,10 @@ export const App = () => {
             <InputCard onSubmit={addMessage} />
 
             {loading ? (
-              <LoadingWrapper>Loading Happy Thoughts...</LoadingWrapper>
+              <LoadingWrapper>
+                <HeartLoader />
+                <p>Loading Happy Thoughts...</p>
+              </LoadingWrapper>
             ) : (
               <ScrollArea>
                 <MessageList 
@@ -121,6 +127,7 @@ const AppContainer = styled.div`
 
 const LoadingWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100%;
