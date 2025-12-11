@@ -6,48 +6,31 @@ import { Time } from "./Time.jsx";
 export const MessageCard = ({ id, text, hearts, onLike, liked, createdAt }) => {
     return (
         <MessageSection>
-            <StyledLikeCard>
-                <HappyText text={text}/>
-                <LikeButtonWrapper>
-                    <LikeButton 
-                        hearts={hearts}
-                        onLike={() => onLike(id)}
-                        liked={liked}
-                    />
+            <HappyText text={text}/>
+            <LikeButtonWrapper>
+                <LikeButton 
+                    hearts={hearts}
+                    onLike={() => onLike(id)}
+                    liked={liked}
+                />
 
-                    <Time createdAt={createdAt}/>
-                </LikeButtonWrapper>
-            </StyledLikeCard>
+                <Time createdAt={createdAt}/>
+            </LikeButtonWrapper>
         </MessageSection>
     )
 }
 
-const MessageSection = styled.section`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 30px 0;
-`
-
-const StyledLikeCard = styled.div`
+const MessageSection = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    margin-bottom: 30px;
     gap: 20px;
     border: 2px solid ${({ theme }) => theme.colors.border };
-    width: 50%;
     height: auto;
     padding: 20px;
     background-color: ${({ theme }) => theme.colors.cardBackground };
-    box-shadow: 7px 7px #1a1a1a;
-
-    @media ${({ theme }) => theme.breakpoints.mobile} {
-        width: 90%;
-    } 
-
-    @media ${({ theme }) => theme.breakpoints.tablet} {
-        width: 70%;
-    } 
+    box-shadow: 7px 7px ${({ theme }) => theme.colors.border };
     `
 
 const LikeButtonWrapper = styled.div`

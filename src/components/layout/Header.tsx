@@ -7,7 +7,7 @@ type HeaderProps = {
 export const Header =({ likedCount }: HeaderProps ) => {
     return (
         <NavBar>
-            ❤️ {likedCount} liked
+            You liked ❤️ {likedCount} posts
         </NavBar>
     )
 }

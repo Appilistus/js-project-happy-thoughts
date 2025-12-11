@@ -2,7 +2,7 @@ import { MessageCard } from "./MessageCard.jsx";
 
 export const MessageList = ({ messages, onLike }) => {
     return (
-        <div>
+        <>
             {messages.map((message) => {
                 return (
                     <MessageCard
@@ -16,6 +16,6 @@ export const MessageList = ({ messages, onLike }) => {
                     />
                 )
             })}
-        </div>
+        </>
     )
 }

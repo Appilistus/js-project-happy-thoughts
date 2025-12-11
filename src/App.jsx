@@ -27,12 +27,11 @@ export const App = () => {
       fetch("https://happy-thoughts-api-4ful.onrender.com/thoughts")
       .then(res => res.json())
       .then(data => {
-        setTimeout(() => {
         setMessages(data)
         setLoading(false)
-      }, 5000)
-    })
-  }
+      },)
+    }
+
     fetchMessages() // Initial fetch
 
     // Set interval to fetch messages every 30 seconds
@@ -94,7 +93,9 @@ export const App = () => {
 
             <Hero text="Happy Thoughts"/>
 
-            <InputCard onSubmit={addMessage} />
+            <CardWrapper>
+              <InputCard onSubmit={addMessage} />
+            </CardWrapper>
 
             {loading ? (
               <LoadingWrapper>
@@ -103,13 +104,14 @@ export const App = () => {
               </LoadingWrapper>
             ) : (
               <ScrollArea>
-                <MessageList 
-                  messages={messages}
-                  onLike={increaseHeart}
-                />
+                <CardWrapper>
+                  <MessageList 
+                    messages={messages}
+                    onLike={increaseHeart}
+                  />
+                </CardWrapper>
               </ScrollArea>
             )}
-              
 
             <Footer text="&copy; ❤️ Happy Thoughts ❤️"/>
 
@@ -124,9 +126,15 @@ const AppContainer = styled.div`
   flex-direction: column;
   height: 100vh;
 `
+const CardWrapper = styled.div`
+  width: 600px;
+  max-width: 85%;
+  margin: 0 auto;
+`
 
 const LoadingWrapper = styled.div`
   display: flex;
+  overflow-y: auto;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -138,7 +146,22 @@ const LoadingWrapper = styled.div`
 const ScrollArea = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 20px 0;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  padding: 30px 0 50px;
+
+  /* Scrollbar Styling */
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.primary };
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: ${({ theme }) => theme.colors.formBackground };
+  }
 `
