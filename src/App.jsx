@@ -18,6 +18,7 @@ export const App = () => {
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [scroll, setScroll] = useState(false)
 
   // State to track liked posts in local storage
   const [likedPosts, setLikedPosts] = useState(() => {
@@ -77,6 +78,7 @@ export const App = () => {
 
       const data = await response.json()
       setMessages(prev => [data, ...prev])
+      setScroll(true)
     
     } catch (error) {
       console.error("Error posting message:", error)
@@ -85,13 +87,14 @@ export const App = () => {
   }
 
   useEffect(() => {
-    if (scrollRef.current) {
+    if (scroll && scrollRef.current) {
       scrollRef.current.scrollTo({
         top: 0,
         behavior: "smooth"
       })
+      setScroll(false)
     }
-  },[messages])
+  },[messages, scroll])
 
   // Send like to API
   const increaseHeart = async (id) => {
@@ -180,7 +183,6 @@ const ErrorBox = styled.div`
   width: fit-content;
   text-align: center;
 `
-
 const LoadingWrapper = styled.div`
   display: flex;
   overflow-y: auto;
