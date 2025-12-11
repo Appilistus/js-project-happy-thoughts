@@ -150,6 +150,7 @@ const ScrollArea = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 30px 0 50px;
+  padding-left: 12px;
 
   /* Scrollbar Styling */
   &::-webkit-scrollbar {
