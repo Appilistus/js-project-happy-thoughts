@@ -17,6 +17,7 @@ export const App = () => {
 
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   // State to track liked posts in local storage
   const [likedPosts, setLikedPosts] = useState(() => {
@@ -28,11 +29,22 @@ export const App = () => {
   useEffect(() => {
     const fetchMessages = () => {
       fetch("https://happy-thoughts-api-4ful.onrender.com/thoughts")
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`Failed to fetch: ${res.status}`)
+        }
+        return res.json()
+    })
       .then(data => {
         setMessages(data)
         setLoading(false)
-      },)
+        setError(null)
+      })
+      .catch(error => {
+        console.error("Error fetching messages:", error)
+        setError("Something went wrong. Please try again ❤️")
+        setLoading(false)
+      })
     }
 
     fetchMessages() // Initial fetch
@@ -51,17 +63,25 @@ export const App = () => {
 
   // Post new message to API
   const addMessage = async (newText) => {
-    const response = await fetch("https://happy-thoughts-api-4ful.onrender.com/thoughts", 
-      {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ message: newText})
+    try {
+      const response = await fetch("https://happy-thoughts-api-4ful.onrender.com/thoughts", 
+        {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ message: newText})
+        })
+
+      if (!response.ok) {
+        throw new Error("Failed to post your message 💔")
       }
-    )
 
-    const data = await response.json()
-
-    setMessages(prev => [data, ...prev])
+      const data = await response.json()
+      setMessages(prev => [data, ...prev])
+    
+    } catch (error) {
+      console.error("Error posting message:", error)
+      setError("Something went wrong. Please try again ❤️")
+    }
   }
 
   useEffect(() => {
@@ -77,22 +97,31 @@ export const App = () => {
   const increaseHeart = async (id) => {
     const message = messages.find(msg => msg._id === id)
 
-    await fetch(
-      `https://happy-thoughts-api-4ful.onrender.com/thoughts/${message._id}/like`,
-      { method: "POST"}
-    )
+    try {
+      const response = await fetch(`https://happy-thoughts-api-4ful.onrender.com/thoughts/${message._id}/like`,
+        { method: "POST"}
+      )
 
-    const updated = messages.map(msg =>
-      msg._id === id 
-        ? { ...msg, hearts: msg.hearts + 1 } 
-        : msg
-    )
-    setMessages(updated)
+      if (!response.ok) {
+        throw new Error("Failed to send like 💔")
+      }
+  
+      const updated = messages.map(msg =>
+        msg._id === id 
+          ? { ...msg, hearts: msg.hearts + 1 } 
+          : msg
+      )
+      setMessages(updated)
+  
+      // Update likedPosts state
+      setLikedPosts(prev =>
+        prev.includes(id) ? prev : [...prev, id]
+      )
 
-    // Update likedPosts state
-    setLikedPosts(prev =>
-      prev.includes(id) ? prev : [...prev, id]
-    )
+    } catch (error) {
+      console.error("Error liking message:", error)
+      setError("Failed to send like ❤️‍🩹 Try again!")
+    }
   }
 
   return (
@@ -108,6 +137,8 @@ export const App = () => {
             <CardWrapper>
               <InputCard onSubmit={addMessage} />
             </CardWrapper>
+
+            {error && <ErrorBox>{error}</ErrorBox>}
 
             {loading ? (
               <LoadingWrapper>
@@ -142,6 +173,12 @@ const CardWrapper = styled.div`
   width: 600px;
   max-width: 85%;
   margin: 0 auto;
+`
+const ErrorBox = styled.div`
+  margin: 50px auto 10px;
+  border-radius: 6px;
+  width: fit-content;
+  text-align: center;
 `
 
 const LoadingWrapper = styled.div`
