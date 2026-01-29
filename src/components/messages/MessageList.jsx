@@ -1,6 +1,6 @@
 import { MessageCard } from "./MessageCard.jsx";
 
-export const MessageList = ({ messages, onLike }) => {
+export const MessageList = ({ messages, onLike, onDelete }) => {
     return (
         <>
             {messages.map((message) => {
@@ -11,7 +11,8 @@ export const MessageList = ({ messages, onLike }) => {
                         text={message.message}
                         hearts={message.hearts}
                         createdAt={message.createdAt}
-                        onLike={() => onLike(message._id)}
+                        onLike={onLike}
+                        onDelete={onDelete}
                         liked={message.hearts > 0}
                     />
                 )

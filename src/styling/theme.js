@@ -9,7 +9,8 @@ export const theme = {
         likeBtnBackground: "#ffe3e3",
         text: "#1a1a1a",
         textSecondary: "#4d4d4d",
-        border: "#000000"
+        border: "#000000",
+        deleteBtn: "#bebebe"
     },
     breakpoints: {
         mobile: "(max-width: 480px)",

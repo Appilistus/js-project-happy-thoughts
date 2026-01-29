@@ -7,6 +7,8 @@ export const LikeButton = ({ hearts, liked, onLike }) => {
                 type="button" 
                 onClick={onLike}
                 liked={liked}
+                aria-label="Like message"
+                title="Like"
             >
                 ❤️ 
             </StyledLikeButton>

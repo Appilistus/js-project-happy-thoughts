@@ -3,7 +3,7 @@ import { LikeButton } from "./LikeButton.jsx";
 import { HappyText } from "./MessageText.jsx";
 import { Time } from "./Time.jsx";
 
-export const MessageCard = ({ id, text, hearts, onLike, liked, createdAt }) => {
+export const MessageCard = ({ id, text, hearts, onLike, onDelete, liked, createdAt }) => {
     return (
         <MessageSection>
             <HappyText text={text}/>
@@ -13,8 +13,15 @@ export const MessageCard = ({ id, text, hearts, onLike, liked, createdAt }) => {
                     onLike={() => onLike(id)}
                     liked={liked}
                 />
-
-                <Time createdAt={createdAt}/>
+                <StyledDiv>
+                    <Time createdAt={createdAt}/>
+                    <DeleteBtn
+                        type="button"
+                        onClick={() => onDelete(id)}
+                        aria-label="Delete message"
+                        title="Delete"
+                    >🗑️</DeleteBtn>
+                </StyledDiv>
             </LikeButtonWrapper>
         </MessageSection>
     )
@@ -38,4 +45,23 @@ const LikeButtonWrapper = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+`
+const StyledDiv = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+`
+const DeleteBtn = styled.button`
+    background-color: ${({ theme }) => theme.colors.formBackground  };
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+    background-color: ${({ theme }) => theme.colors.deleteBtn};
+    }
 `

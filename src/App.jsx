@@ -11,6 +11,10 @@ import { InputCard } from "./components/input/InputCard.jsx"
 import { MessageList } from "./components/messages/MessageList.jsx"
 import { HeartLoader } from "./styling/LoadingAnime.jsx"
 
+// const API_URL = "http://localhost:8080"
+const API_URL = import.meta.env.VITE_API_URL
+
+
 export const App = () => {
 
   const scrollRef = useRef(null)
@@ -26,35 +30,27 @@ export const App = () => {
     return saved ? JSON.parse(saved) : []
   })
 
-  // fetch messages from API + interval polling
-  useEffect(() => {
-    const fetchMessages = () => {
-      fetch("https://happy-thoughts-api-4ful.onrender.com/thoughts")
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`Failed to fetch: ${res.status}`)
-        }
-        return res.json()
-    })
-      .then(data => {
-        setMessages(data)
-        setLoading(false)
-        setError(null)
-      })
-      .catch(error => {
-        console.error("Error fetching messages:", error)
-        setError("Something went wrong. Please try again ❤️")
-        setLoading(false)
-      })
+
+  const fetchMessages = async () => {
+    try {
+      const res = await fetch(`${API_URL}/messages`)
+      if (!res.ok) {
+        throw new Error(`Failed to fetch: ${res.status}`)
     }
+    const data = await res.json()
+    setMessages(data.response)
+    setError(null)
+  } catch (error) {
+    console.error("Error fetching messages:", error)
+    setError("Something went wrong. Please try again ❤️")
+  } finally {
+    setLoading(false)
+  }
+}
 
-    fetchMessages() // Initial fetch
-
-    // Set interval to fetch messages every 30 seconds
-    const intervalID = setInterval(fetchMessages, 30000)
-
-    // Cleanup interval on component unmount
-    return () => clearInterval(intervalID)
+// fetch messages from API
+  useEffect(() => {
+      fetchMessages()
   },[])
 
   // Update local storage when likedPosts changes
@@ -65,19 +61,21 @@ export const App = () => {
   // Post new message to API
   const addMessage = async (newText) => {
     try {
-      const response = await fetch("https://happy-thoughts-api-4ful.onrender.com/thoughts", 
+      const response = await fetch(`${API_URL}/messages`, 
         {
           method: "POST",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify({ message: newText})
         })
 
+        const data = await response.json()
+
       if (!response.ok) {
-        throw new Error("Failed to post your message 💔")
+        throw new Error(data.message || "Failed to post your message 💔")
       }
 
-      const data = await response.json()
-      setMessages(prev => [data, ...prev])
+      // setMessages(prev => [data.response, ...prev])
+      await fetchMessages()
       setScroll(true)
     
     } catch (error) {
@@ -98,24 +96,20 @@ export const App = () => {
 
   // Send like to API
   const increaseHeart = async (id) => {
-    const message = messages.find(msg => msg._id === id)
-
     try {
-      const response = await fetch(`https://happy-thoughts-api-4ful.onrender.com/thoughts/${message._id}/like`,
-        { method: "POST"}
+      const response = await fetch(`${API_URL}/messages/${id}/like`,
+        { method: "PATCH"}
       )
+
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error("Failed to send like 💔")
+        throw new Error(data.message || "Failed to send like 💔")
       }
-  
-      const updated = messages.map(msg =>
-        msg._id === id 
-          ? { ...msg, hearts: msg.hearts + 1 } 
-          : msg
+
+      setMessages((prev) =>
+        prev.map((msg) => (msg._id === id ? data.response : msg))
       )
-      setMessages(updated)
-  
       // Update likedPosts state
       setLikedPosts(prev =>
         prev.includes(id) ? prev : [...prev, id]
@@ -124,6 +118,26 @@ export const App = () => {
     } catch (error) {
       console.error("Error liking message:", error)
       setError("Failed to send like ❤️‍🩹 Try again!")
+    }
+  }
+
+  const deleteMessage = async (id) => {
+    try {
+      const response = await fetch(`${API_URL}/messages/${id}`, 
+        {
+          method: "DELETE",
+      })
+
+      const data = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        throw new Error(data?.message || " Failed to delete message 💔")
+      }
+
+      setMessages((prev) => prev.filter((msg) => msg._id !== id)) // delete from screen
+      setLikedPosts((prev) => prev.filter((likedId) => likedId !== id)) // delete from liked posts
+    } catch (error) {
+      setError(error.message || "Failed to delete message❤️‍🩹 Try again!")
     }
   }
 
@@ -154,6 +168,7 @@ export const App = () => {
                   <MessageList 
                     messages={messages}
                     onLike={increaseHeart}
+                    onDelete={deleteMessage}
                   />
                 </CardWrapper>
               </ScrollArea>
