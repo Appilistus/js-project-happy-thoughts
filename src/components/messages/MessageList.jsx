@@ -1,6 +1,6 @@
 import { MessageCard } from "./MessageCard.jsx";
 
-export const MessageList = ({ messages, onLike, onDelete }) => {
+export const MessageList = ({ messages, onLike, onDelete, newPostId }) => {
     return (
         <>
             {messages.map((message) => {
@@ -14,6 +14,7 @@ export const MessageList = ({ messages, onLike, onDelete }) => {
                         onLike={onLike}
                         onDelete={onDelete}
                         liked={message.hearts > 0}
+                        isNew={message._id === newPostId}
                     />
                 )
             })}

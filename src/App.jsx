@@ -10,10 +10,10 @@ import { Footer } from "./components/layout/Footer.js"
 import { InputCard } from "./components/input/InputCard.jsx"
 import { MessageList } from "./components/messages/MessageList.jsx"
 import { HeartLoader } from "./styling/LoadingAnime.jsx"
+import { SortTabs } from "./components/layout/SortTabs.jsx"
+import { FilterTabs } from "./components/layout/FilterTabs.jsx"
 
-// const API_URL = "http://localhost:8080"
 const API_URL = import.meta.env.VITE_API_URL
-
 
 export const App = () => {
 
@@ -23,6 +23,10 @@ export const App = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [scroll, setScroll] = useState(false)
+  const [sortMode, setSortMode] = useState("new") // "new" or "popular"
+  const [heartsFilter, setHeartsFilter] = useState("all") // "all", "with" or "without"
+  const [isFading, setIsFading] = useState(false)
+  const [newPostId, setNewPostId] = useState(null)
 
   // State to track liked posts in local storage
   const [likedPosts, setLikedPosts] = useState(() => {
@@ -32,17 +36,36 @@ export const App = () => {
 
 
   const fetchMessages = async () => {
+    setLoading(true)
     try {
-      const res = await fetch(`${API_URL}/messages`)
+      const sortQuery = sortMode === "popular" ? "sort=hearts" : "sort=createdAt"
+
+      const filterQuery = 
+        heartsFilter === "with" ? "hasHearts=true"
+        : heartsFilter === "without" ? "hasHearts=false"
+        : ""
+
+      const queryString = [sortQuery, filterQuery].filter(Boolean).join("&")
+      const url = `${API_URL}/messages${queryString ? `?${queryString}` : ""}`
+
+      const res = await fetch(url)
       if (!res.ok) {
         throw new Error(`Failed to fetch: ${res.status}`)
     }
     const data = await res.json()
+
     setMessages(data.response)
     setError(null)
+
+    // Trigger fade-in effect
+    requestAnimationFrame(() => {
+      setIsFading(false)
+      setScroll(true)
+    })
   } catch (error) {
     console.error("Error fetching messages:", error)
     setError("Something went wrong. Please try again ❤️")
+    setIsFading(false)
   } finally {
     setLoading(false)
   }
@@ -50,13 +73,8 @@ export const App = () => {
 
 // fetch messages from API
   useEffect(() => {
-      fetchMessages()
-  },[])
-
-  // Update local storage when likedPosts changes
-  useEffect(() => {
-    localStorage.setItem("likedPosts", JSON.stringify(likedPosts))
-  }, [likedPosts])
+    fetchMessages()
+  },[sortMode, heartsFilter])
 
   // Post new message to API
   const addMessage = async (newText) => {
@@ -74,9 +92,14 @@ export const App = () => {
         throw new Error(data.message || "Failed to post your message 💔")
       }
 
-      // setMessages(prev => [data.response, ...prev])
-      await fetchMessages()
+      setSortMode("new") // Switch to "new" sort mode after posting
       setScroll(true)
+
+      // Highlight the new post
+      setNewPostId(data.response._id)
+      setTimeout(() => setNewPostId(null), 800) // Clear highlight after 800ms
+
+      await fetchMessages()
     
     } catch (error) {
       console.error("Error posting message:", error)
@@ -122,10 +145,20 @@ export const App = () => {
   }
 
   const deleteMessage = async (id) => {
+    const token = localStorage.getItem("token")
+
+    if (!token) {
+      setError("You must be logged in to delete a message ❤️‍🩹")
+      return
+    }
+
     try {
       const response = await fetch(`${API_URL}/messages/${id}`, 
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
       })
 
       const data = await response.json().catch(() => null)
@@ -141,6 +174,14 @@ export const App = () => {
     }
   }
 
+  // Handle sort mode change with fade effect
+  const handleSortChange = (mode) => {
+    setIsFading(true)
+    setTimeout(() => {
+      setSortMode(mode)
+    },400)
+  }
+
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -150,10 +191,22 @@ export const App = () => {
             <Header likedCount={likedPosts.length} />
 
             <Hero text="Happy Thoughts"/>
-
+            
             <CardWrapper>
               <InputCard onSubmit={addMessage} />
             </CardWrapper>
+            <SortTabs
+              sortMode={sortMode}
+              onChange={handleSortChange}
+            />
+            <FilterTabs
+              heartsFilter={heartsFilter}
+              onChange={(filter) => {
+                setIsFading(true)
+                setHeartsFilter(filter)
+                setScroll(true)
+              }}
+            />
 
             {error && <ErrorBox>{error}</ErrorBox>}
 
@@ -165,11 +218,14 @@ export const App = () => {
             ) : (
               <ScrollArea ref={scrollRef}>
                 <CardWrapper>
-                  <MessageList 
-                    messages={messages}
-                    onLike={increaseHeart}
-                    onDelete={deleteMessage}
-                  />
+                  <FadeWrapper $isFading={isFading}>
+                    <MessageList 
+                      messages={messages}
+                      onLike={increaseHeart}
+                      onDelete={deleteMessage}
+                      newPostId={newPostId}
+                    />
+                  </FadeWrapper>
                 </CardWrapper>
               </ScrollArea>
             )}
@@ -215,7 +271,7 @@ const ScrollArea = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 30px 0 50px;
+  padding: 20px 0 50px;
   padding-left: 12px;
 
   /* Scrollbar Styling */
@@ -231,4 +287,9 @@ const ScrollArea = styled.div`
   &::-webkit-scrollbar-track {
     background-color: ${({ theme }) => theme.colors.formBackground };
   }
+`
+
+const FadeWrapper = styled.div`
+  opacity: ${({ $isFading }) => ($isFading ? 0 : 1)};
+  transition: opacity 400ms ease;
 `

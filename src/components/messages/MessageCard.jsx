@@ -1,29 +1,31 @@
-import styled from "styled-components";
+import styled, { keyframes} from "styled-components";
 import { LikeButton } from "./LikeButton.jsx";
 import { HappyText } from "./MessageText.jsx";
 import { Time } from "./Time.jsx";
 
-export const MessageCard = ({ id, text, hearts, onLike, onDelete, liked, createdAt }) => {
+export const MessageCard = ({ id, text, hearts, onLike, onDelete, liked, createdAt, isNew }) => {
     return (
-        <MessageSection>
-            <HappyText text={text}/>
-            <LikeButtonWrapper>
-                <LikeButton 
-                    hearts={hearts}
-                    onLike={() => onLike(id)}
-                    liked={liked}
-                />
-                <StyledDiv>
-                    <Time createdAt={createdAt}/>
-                    <DeleteBtn
-                        type="button"
-                        onClick={() => onDelete(id)}
-                        aria-label="Delete message"
-                        title="Delete"
-                    >🗑️</DeleteBtn>
-                </StyledDiv>
-            </LikeButtonWrapper>
-        </MessageSection>
+        <CardWrapper $isNew={isNew}>
+            <MessageSection>
+                <HappyText text={text}/>
+                <LikeButtonWrapper>
+                    <LikeButton 
+                        hearts={hearts}
+                        onLike={() => onLike(id)}
+                        liked={liked}
+                    />
+                    <StyledDiv>
+                        <Time createdAt={createdAt}/>
+                        <DeleteBtn
+                            type="button"
+                            onClick={() => onDelete(id)}
+                            aria-label="Delete message"
+                            title="Delete"
+                        >🗑️</DeleteBtn>
+                    </StyledDiv>
+                </LikeButtonWrapper>
+            </MessageSection>
+        </CardWrapper>
     )
 }
 
@@ -64,4 +66,20 @@ const DeleteBtn = styled.button`
     &:hover {
     background-color: ${({ theme }) => theme.colors.deleteBtn};
     }
+`
+
+const popIn = keyframes`
+    from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.8);
+    filter: blur(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+`
+const CardWrapper = styled.div`
+    animation: ${({ $isNew }) => ($isNew ? popIn : "none")} 700ms ease;
 `
