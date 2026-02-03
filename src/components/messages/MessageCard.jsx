@@ -3,7 +3,7 @@ import { LikeButton } from "./LikeButton.jsx";
 import { HappyText } from "./MessageText.jsx";
 import { Time } from "./Time.jsx";
 
-export const MessageCard = ({ id, text, hearts, onLike, onDelete, liked, createdAt, isNew }) => {
+export const MessageCard = ({ id, text, hearts, onLike, onDelete, liked, createdAt, isNew, canDelete }) => {
     return (
         <CardWrapper $isNew={isNew}>
             <MessageSection>
@@ -16,12 +16,15 @@ export const MessageCard = ({ id, text, hearts, onLike, onDelete, liked, created
                     />
                     <StyledDiv>
                         <Time createdAt={createdAt}/>
-                        <DeleteBtn
-                            type="button"
-                            onClick={() => onDelete(id)}
-                            aria-label="Delete message"
-                            title="Delete"
-                        >🗑️</DeleteBtn>
+
+                        {canDelete && (
+                            <DeleteBtn
+                                type="button"
+                                onClick={() => onDelete(id)}
+                                aria-label="Delete message"
+                                title="Delete"
+                            >🗑️</DeleteBtn>
+                        )}
                     </StyledDiv>
                 </LikeButtonWrapper>
             </MessageSection>

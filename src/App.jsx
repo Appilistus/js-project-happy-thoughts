@@ -12,6 +12,7 @@ import { MessageList } from "./components/messages/MessageList.jsx"
 import { HeartLoader } from "./styling/LoadingAnime.jsx"
 import { SortTabs } from "./components/layout/SortTabs.jsx"
 import { FilterTabs } from "./components/layout/FilterTabs.jsx"
+import { AuthPage } from "./pages/AuthPage.jsx"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -27,6 +28,21 @@ export const App = () => {
   const [heartsFilter, setHeartsFilter] = useState("all") // "all", "with" or "without"
   const [isFading, setIsFading] = useState(false)
   const [newPostId, setNewPostId] = useState(null)
+  
+  const [showAuth, setShowAuth] = useState(false)
+  const [auth, setAuth] = useState(() => ({
+    token: localStorage.getItem("token"),
+    userId: localStorage.getItem("userId")
+  }))
+
+  const isLoggedIn = Boolean(auth.token)
+  const currentUserId = auth.userId
+
+  const logout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("userId")
+    setAuth({ token: null, userId: null})
+  }
 
   // State to track liked posts in local storage
   const [likedPosts, setLikedPosts] = useState(() => {
@@ -149,6 +165,7 @@ export const App = () => {
 
     if (!token) {
       setError("You must be logged in to delete a message ❤️‍🩹")
+      setShowAuth(true)
       return
     }
 
@@ -188,7 +205,21 @@ export const App = () => {
         <GlobalStyles />
           <AppContainer>
 
-            <Header likedCount={likedPosts.length} />
+            <Header 
+              likedCount={likedPosts.length} 
+              isLoggedIn={isLoggedIn}
+              onLoginClick={() => setShowAuth(true)}
+              onLogoutClick={logout}
+            />
+
+            {showAuth && (
+              <AuthPage
+                onLoginSuccess={(authData) => {
+                  setAuth(authData)
+                  setShowAuth(false)
+                }}
+              />
+            )}
 
             <Hero text="Happy Thoughts"/>
             
@@ -224,6 +255,7 @@ export const App = () => {
                       onLike={increaseHeart}
                       onDelete={deleteMessage}
                       newPostId={newPostId}
+                      currentUserId={currentUserId}
                     />
                   </FadeWrapper>
                 </CardWrapper>

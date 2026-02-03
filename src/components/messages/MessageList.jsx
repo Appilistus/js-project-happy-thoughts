@@ -1,9 +1,11 @@
 import { MessageCard } from "./MessageCard.jsx";
 
-export const MessageList = ({ messages, onLike, onDelete, newPostId }) => {
+export const MessageList = ({ messages, onLike, onDelete, newPostId, currentUserId }) => {
     return (
         <>
             {messages.map((message) => {
+                const isOwner = currentUserId && message.userId?.toString() === currentUserId
+                
                 return (
                     <MessageCard
                         key={message._id}
@@ -15,6 +17,7 @@ export const MessageList = ({ messages, onLike, onDelete, newPostId }) => {
                         onDelete={onDelete}
                         liked={message.hearts > 0}
                         isNew={message._id === newPostId}
+                        canDelete={isOwner}
                     />
                 )
             })}

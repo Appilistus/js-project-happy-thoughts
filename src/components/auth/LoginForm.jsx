@@ -1,4 +1,5 @@
 import { useState } from "react"
+import styled from "styled-components"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -36,8 +37,8 @@ export const LoginForm = () => {
   }
 
   return (
-    <form onSubmit={handleLogin}>
-      <input
+    <Form onSubmit={handleLogin}>
+      <Input
         type="text"
         placeholder="Username"
         value={name}
@@ -45,7 +46,7 @@ export const LoginForm = () => {
         required
       />
 
-      <input
+      <Input
         type="password"
         placeholder="Password"
         value={password}
@@ -53,14 +54,45 @@ export const LoginForm = () => {
         required
       />
 
-      <button
+      <Button
         type="submit"
         aria-label="Login button"
       >
         Login
-      </button>
+      </Button>
       {error && <p>{error}</p>}
-    </form>
+    </Form>
   )
 }
 
+const Form = styled.form`
+  display: grid;
+  gap: 8px;
+`
+
+const Input = styled.input`
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  background: ${({ theme }) => theme.colors.inputBackground};
+  color: ${({ theme }) => theme.colors.text};
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.placeholder};
+  }
+`
+
+const Button = styled.button`
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.buttonText};
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.secondary};
+  }
+`

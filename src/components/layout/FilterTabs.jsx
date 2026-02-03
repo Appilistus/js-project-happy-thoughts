@@ -47,11 +47,10 @@ const TabButton = styled.button`
   background: ${(props) => (props.$active ? props.theme.colors.primary : props.theme.colors.background)};
   color: ${(props) => (props.$active ? props.theme.colors.background : props.theme.colors.text)};
   border: ${(props) => (props.$active ? `1px solid ${props.theme.colors.primary}` : `1px solid ${props.theme.colors.border}`)};
-  padding: 10px 20px;
-  margin: 0 5px;
+  padding: 8px 16px;
   border-radius: 20px;
+  font-weight: bold;
   cursor: pointer;
-  font-size: 16px;
   transition: background 0.3s, color 0.3s;
 
   &:hover {
