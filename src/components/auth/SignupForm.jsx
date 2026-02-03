@@ -5,6 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL
 
 export const SignupForm = ({ onSignupSuccess }) => {
   const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
@@ -17,10 +18,14 @@ export const SignupForm = ({ onSignupSuccess }) => {
     setIsSubmitting(true)
 
     try {
-      const response = await fetch(`${API_URL}/users/register`, {
+      const response = await fetch(`${API_URL}/users/signup`, {
         method: "POST",
+        body: JSON.stringify({ 
+          name,
+          email,
+          password
+        }),
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, password})
       })
 
       const data = await response.json()
@@ -48,6 +53,15 @@ export const SignupForm = ({ onSignupSuccess }) => {
             value={name}
             onChange={(e) => setName(e.target.value)} />
         </Label>
+
+        <Label>
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)} />
+        </Label>
+
 
         <Label>
           <Input

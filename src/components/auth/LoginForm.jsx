@@ -3,24 +3,23 @@ import styled from "styled-components"
 
 const API_URL = import.meta.env.VITE_API_URL
 
-export const LoginForm = () => {
-  const [name, setName] = useState("")
+export const LoginForm = ({ onLoginSuccess}) => {
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState(null)
 
   const handleLogin = async (e) => {
     e.preventDefault()
+    setError(null)
 
     try {
-      const response= await fetch(`${API_URL}/login`, { 
+      const response= await fetch(`${API_URL}/users/login`, { 
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({ 
-          name, 
+          email, 
           password 
-        })
+        }),
+        headers: {'Content-Type': 'application/json'},
       })
 
       const data = await response.json()
@@ -29,8 +28,14 @@ export const LoginForm = () => {
         throw new Error("Login failed")
       }
 
-      localStorage.setItem("token", data.token)
-      localStorage.setItem("userid", data.userId)
+      const token = data.response.accessToken
+      const userId = data.response.id
+
+      localStorage.setItem("token", token)
+      localStorage.setItem("userid", userId)
+
+      onLoginSuccess({ token, userId })
+
     } catch (err) {
       setError(err.message)
     }
@@ -40,9 +45,9 @@ export const LoginForm = () => {
     <Form onSubmit={handleLogin}>
       <Input
         type="text"
-        placeholder="Username"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         required
       />
 

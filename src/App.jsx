@@ -44,6 +44,15 @@ export const App = () => {
     setAuth({ token: null, userId: null})
   }
 
+  const getClientId = () => {
+    let id = localStorage.getItem("clientId")
+    if(!id) {
+      id = crypto.randomUUID()
+      localStorage.setItem("clientId", id)
+    }
+    return id
+  }
+
   // State to track liked posts in local storage
   const [likedPosts, setLikedPosts] = useState(() => {
     const saved = localStorage.getItem("likedPosts")
@@ -95,10 +104,14 @@ export const App = () => {
   // Post new message to API
   const addMessage = async (newText) => {
     try {
+
+      const headers = { "Content-Type": "application/json" }
+      if (auth.token) headers.Authorization = `Bearer ${auth.token}`
+
       const response = await fetch(`${API_URL}/messages`, 
         {
           method: "POST",
-          headers: {"Content-Type": "application/json"},
+          headers: headers,
           body: JSON.stringify({ message: newText})
         })
 
@@ -136,8 +149,17 @@ export const App = () => {
   // Send like to API
   const increaseHeart = async (id) => {
     try {
-      const response = await fetch(`${API_URL}/messages/${id}/like`,
-        { method: "PATCH"}
+      const headers = {
+        "X-Client-Id": getClientId(),
+      }
+      if (auth.token) {
+        headers.Authorization = `Bearer ${auth.token}`
+      }
+
+      const response = await fetch(`${API_URL}/messages/${id}/like`, {
+        method: "PATCH",
+        headers: headers,
+        }
       )
 
       const data = await response.json()
@@ -156,7 +178,7 @@ export const App = () => {
 
     } catch (error) {
       console.error("Error liking message:", error)
-      setError("Failed to send like ❤️‍🩹 Try again!")
+      setError("Failed to send like ❤️‍🩹")
     }
   }
 
@@ -174,7 +196,7 @@ export const App = () => {
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${auth.token}`,
           }
       })
 
@@ -214,8 +236,10 @@ export const App = () => {
 
             {showAuth && (
               <AuthPage
-                onLoginSuccess={(authData) => {
-                  setAuth(authData)
+                onLoginSuccess={({ token, userId }) => {
+                  setAuth({ token, userId })
+                  localStorage.setItem("token", token)
+                  localStorage.setItem("userId", userId)
                   setShowAuth(false)
                 }}
               />
@@ -256,6 +280,7 @@ export const App = () => {
                       onDelete={deleteMessage}
                       newPostId={newPostId}
                       currentUserId={currentUserId}
+                      isLoggedIn={Boolean(auth.token)}
                     />
                   </FadeWrapper>
                 </CardWrapper>
