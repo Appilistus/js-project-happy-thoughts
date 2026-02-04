@@ -59,8 +59,6 @@ export const App = () => {
     return saved ? JSON.parse(saved) : []
   })
 
-  console.log("Current API URL is:", import.meta.env.VITE_API_URL);
-
   const fetchMessages = async () => {
     setLoading(true)
     try {
